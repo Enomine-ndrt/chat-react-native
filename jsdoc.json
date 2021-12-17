@@ -1,0 +1,29 @@
+{
+  "source":{
+    "include":["./src"],
+    "includePattern": ".+\\.js(doc|x)?$",
+    "exclude": "node_modules/|docs"
+  },
+ "tags": {
+    "allowUnknownTags": true,
+    "dictionaries": ["jsdoc","closure"]
+},
+
+"plugins": [
+    "node_modules/better-docs/typescript"
+],
+"typescript": {
+    "moduleRoot": "test"
+},
+ "templates": {
+  "better-docs": {
+      "name": "My React components"
+    }
+},
+"opts": {
+    "template": "node_modules/better-docs",
+    "destination": "docs/",
+    "recurse": true
+}
+
+  }
