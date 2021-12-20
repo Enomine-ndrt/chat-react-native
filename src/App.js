@@ -98,10 +98,11 @@ const App = () => {
       {/* View con estilo body */}
       <View style={styles.backgroundColor}>
         <Text>{serverState}</Text>
+        <Button title="GPS" />
       </View>
 
       <View style={styles.scrollview}>
-        <Map />
+        {<Map />}
         {/* Se hace uso de funcion importada Map */}
         <ScrollView>
           {serverMessages.map((item, ind) => {

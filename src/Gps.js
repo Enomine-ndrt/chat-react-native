@@ -1,9 +1,8 @@
-import {StyleSheet,View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 /**
  * Manejo del gps
  * @returns View
  */
-export default function GPS(){
+import RNLocation from 'react-native-location';
 
-
-}
+export default function GPS() {}
