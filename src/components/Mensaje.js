@@ -14,18 +14,26 @@ const Mensaje = (props) => {
   var ws = React.useRef(
     new WebSocket(`${DIRECCION_SERVER}`),
   ).current; //direccion chat
+  //const [serverMessages, setServerMessages] = React.useState([]); // hook para mensajes
+ //const [mensajes, setMensajes] = React.useState(''); // hook para mensaje
+ // const serverMessagesList = [];
 
   const timeNow = new Date().toLocaleString(); // funcion javascript para tomar el tiempo
-  const mensaje = props.mensaje;
-  const location = props.location;
-
-  console.log('h '+mensaje +" location latitude: "+location.latitude +" longitud "+location.longitude);
+  let mensaje = props.mensaje;
+  let locations = props.location;
+   var estado = props.estado;
+/*
+  console.log('h '+mensaje +" location latitude: "+
+  location.latitude +" longitud "
+  +location.longitude+" estado "+estado);
+*/
+  //setMensajes(mensaje);
   React.useEffect(() => {
     /**
      * lista de mensajes
      * @type {Array}
      */
-    const serverMessagesList = [];
+    //const serverMessagesList = [];
     ws.onopen = () => {
       // se habre conexion al server
      // setServerState('Connected to the server');
@@ -48,13 +56,18 @@ const Mensaje = (props) => {
        *ServerMessage list
        * @type {Array}
        */
-      serverMessagesList.push(e.data); //se guardar en un array el mensaje
+      //serverMessagesList.push(e.data); //se guardar en un array el mensaje
       //setServerMessages([...serverMessagesList]); //se envia con el hook
     };
    // ws.send(mensaje); //envia mensaje mas tiempo actual
 
   }, []);
 
+  if(estado){
+    const timeNow = new Date().toLocaleString(); // funcion javascript para tomar el tiempo
+    ws.send('time'+timeNow+' mensaje '+mensaje+' latitude '+locations.latitude+' longitude '+locations.longitude); //envia mensaje mas tiempo actual
+   
+  }
  
   return null;
 };

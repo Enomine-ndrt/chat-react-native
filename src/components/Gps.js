@@ -16,6 +16,7 @@ RNLocation.configure({
 const GPS = (props) => {
  
   const [locationGPS, setLocationGPS] = useState([])
+  const [estado,setEstado] = useState(false);
 
   const getLocation = async () => {
     
@@ -44,9 +45,11 @@ const GPS = (props) => {
       });
    
      // console.log(permission);
+    
       location = await RNLocation.getLatestLocation({timeout: 100});
       setLocationGPS(location);
     } else {
+      setEstado(permission);
       location = await RNLocation.getLatestLocation({timeout: 100});
       setLocationGPS(location);
     }
@@ -54,7 +57,7 @@ const GPS = (props) => {
 
   return (
     <View>
-      <Mensaje mensaje={props.chat} location={locationGPS} />
+      <Mensaje mensaje={props.chat} location={locationGPS} estado={estado}/>
       <Button title={'Submit'} onPress={getLocation} />
     </View>
   );

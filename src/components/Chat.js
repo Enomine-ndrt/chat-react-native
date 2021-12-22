@@ -49,19 +49,20 @@ const Chat = () => {
   /**
    * Conexion a direccion de servidor
    */
+  /*
   var ws = React.useRef(
     new WebSocket(`${DIRECCION_SERVER}`),
   ).current; //direccion chat
-
+*/
   const timeNow = new Date().toLocaleString(); // funcion javascript para tomar el tiempo
 
-  React.useEffect(() => {
+ // React.useEffect(() => {
     /**
      * lista de mensajes
      * @type {Array}
      */
     const serverMessagesList = [];
-    ws.onopen = () => {
+  /*  ws.onopen = () => {
       // se habre conexion al server
       setServerState('Connected to the server');
       setDisableButton(false);
@@ -80,10 +81,10 @@ const Chat = () => {
        *ServerMessage list
        * @type {Array}
        */
-      serverMessagesList.push(e.data); //se guardar en un array el mensaje
-      setServerMessages([...serverMessagesList]); //se envia con el hook
-    };
-  }, []);
+      //serverMessagesList.push(e.data); //se guardar en un array el mensaje
+      //setServerMessages([...serverMessagesList]); //se envia con el hook
+  //  };
+  //}, []);
   /**
    *submitMessage
    *
@@ -96,9 +97,9 @@ const Chat = () => {
      * @param {string} '' -mensaje time
      * @param {string} timeNow -fecha y hora actual
      */
-    ws.send(messageText + ' time ' + timeNow); //envia mensaje mas tiempo actual
-    setMessageText('');
-    setInputFieldEmpty(true);
+   // ws.send(messageText + ' time ' + timeNow); //envia mensaje mas tiempo actual
+  //  setMessageText('');
+   // setInputFieldEmpty(true);
   };
 
   return (
@@ -113,6 +114,7 @@ const Chat = () => {
         {/* Se hace uso de funcion importada Map */}
         
         <ScrollView>
+          
           {serverMessages.map((item, ind) => {
            
             return (
@@ -121,6 +123,7 @@ const Chat = () => {
               </Text>
             );
           })}
+          
         </ScrollView>
       </View>
       <View style={styles.row}>
@@ -134,11 +137,7 @@ const Chat = () => {
           value={messageText}
         />
         <GPS chat={messageText} />
-        <Button
-          onPress={submitMessage} //onpress succede cuando se pulsa el boton
-          title="submit"
-          disabled={disableButton}
-        />
+       
       </View>
     </View>
   );
