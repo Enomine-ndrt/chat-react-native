@@ -1,14 +1,10 @@
 import React from 'react';
 import {
   ScrollView,
-  TextInput,
-  Button,
   StyleSheet,
-  Text,
   View,
 } from 'react-native';
 import Chat from './components/Chat';
-
 import {LogBox} from 'react-native';
 LogBox.ignoreLogs(['new NativeEventEmitter']); // Ignore log notification by message
 LogBox.ignoreAllLogs(); //Ignore all log notifications
@@ -16,7 +12,7 @@ LogBox.ignoreAllLogs(); //Ignore all log notifications
 const App = () => {
  
   return (
-    <View style={styles.body}>
+      <View style={styles.body}>
       <Chat />
     </View>
   );

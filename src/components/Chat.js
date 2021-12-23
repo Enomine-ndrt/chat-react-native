@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useEffect} from 'react';
 import {
   ScrollView,
   TextInput,
@@ -10,8 +10,8 @@ import {
 
 import RNLocation from 'react-native-location';
 import GPS from './Gps';
-
 import {DIRECCION_SERVER} from '@env';
+import Conexion from './Conexion';
 
 /**
  *App de Chat
@@ -37,6 +37,7 @@ RNLocation.configure({
   distanceFilter: 5.0,
 });
 const Chat = () => {
+
   /**
    * Hooks para estados
    */
@@ -45,68 +46,41 @@ const Chat = () => {
   const [disableButton, setDisableButton] = React.useState(true); // hook para estado de boton
   const [inputFieldEmpty, setInputFieldEmpty] = React.useState(true); // hook
   const [serverMessages, setServerMessages] = React.useState([]); // hook para mensajes
+  const [mesaje,setMesaje] = React.useState('');
+  const serverMessagesList = [];
 
-  /**
-   * Conexion a direccion de servidor
-   */
-  /*
-  var ws = React.useRef(
-    new WebSocket(`${DIRECCION_SERVER}`),
-  ).current; //direccion chat
-*/
-  const timeNow = new Date().toLocaleString(); // funcion javascript para tomar el tiempo
+ 
+ const con = new Conexion();
 
- // React.useEffect(() => {
-    /**
-     * lista de mensajes
-     * @type {Array}
-     */
-    const serverMessagesList = [];
-  /*  ws.onopen = () => {
-      // se habre conexion al server
-      setServerState('Connected to the server');
-      setDisableButton(false);
-    };
-    ws.onclose = e => {
-      // Por si se desconecta
-      setServerState('Disconnected check internet or server');
-      setDisableButton(true);
-    };
-    ws.onerror = e => {
-      // Mensaje de error
-      setServerState(e.message);
-    };
-    ws.onmessage = e => {
-      /**
-       *ServerMessage list
-       * @type {Array}
-       */
-      //serverMessagesList.push(e.data); //se guardar en un array el mensaje
-      //setServerMessages([...serverMessagesList]); //se envia con el hook
-  //  };
-  //}, []);
-  /**
-   *submitMessage
-   *
-   * @param {string} messageText - envia mensaje al servidor
-   */
-  const submitMessage = () => {
-    /**
-     *send
-     * @param {string} messageText -mensaje
-     * @param {string} '' -mensaje time
-     * @param {string} timeNow -fecha y hora actual
-     */
-   // ws.send(messageText + ' time ' + timeNow); //envia mensaje mas tiempo actual
-  //  setMessageText('');
-   // setInputFieldEmpty(true);
-  };
+ const server=  con.conexiones();
+ const serverStatus = con.checkServer(server);
 
+    useEffect(()=>{
+     server.onmessage = e => {
+        /**
+         *ServerMessage list
+         * @type {Array}
+         */
+        
+        var indice = e.data.indexOf(" ");
+         let extraida = e.data.substring(0, indice);
+
+         var ms = extraida.split(":");
+         var mss = ms[1];
+      
+          console.log("onmessage "+mss);   
+        serverMessagesList.push(e.data); //se guardar en un array el mensaje
+        setServerMessages([...serverMessagesList]); //se envia con el hook 
+    };
+  },[]);
+ 
+  
+   
   return (
     <View style={styles.body}>
       {/* View con estilo body */}
       <View style={styles.backgroundColor}>
-        <Text>{serverState}</Text>
+        <Text>{serverStatus}</Text>
        
       </View>
       
@@ -118,9 +92,12 @@ const Chat = () => {
           {serverMessages.map((item, ind) => {
            
             return (
-              <Text>
-                key={ind}, item={item}
+              <View style={styles.messages}>
+                  <Text>
+                {item}
               </Text>
+              </View>
+              
             );
           })}
           
@@ -136,7 +113,7 @@ const Chat = () => {
           }}
           value={messageText}
         />
-        <GPS chat={messageText} />
+        <GPS  chat={messageText} />
        
       </View>
     </View>
@@ -179,6 +156,18 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     padding: 5,
   },
+  messages:{
+    marginTop: 5,
+    backgroundColor: '#fff',
+    borderColor: 'black',
+    height: 60,
+    width: '90%',
+    borderBottomEndRadius: 7,
+    borderBottomLeftRadius: 7,
+    borderBottomRightRadius: 7,
+    borderTopEndRadius: 7,
+    borderTopLeftRadius: 7,
+  }
 });
 
 export default Chat; //se exporta el app

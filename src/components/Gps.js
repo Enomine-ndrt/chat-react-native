@@ -44,14 +44,14 @@ const GPS = (props) => {
         },
       });
    
-     // console.log(permission);
-    
       location = await RNLocation.getLatestLocation({timeout: 100});
       setLocationGPS(location);
     } else {
       setEstado(permission);
       location = await RNLocation.getLatestLocation({timeout: 100});
       setLocationGPS(location);
+      setEstado(false);
+     
     }
   };
 

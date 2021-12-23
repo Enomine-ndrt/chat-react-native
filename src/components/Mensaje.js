@@ -1,74 +1,39 @@
 //import variable 
 import {DIRECCION_SERVER} from '@env';
-import React from 'react';
-import {
-  ScrollView,
-  TextInput,
-  Button,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
-
+import React,{useEffect} from 'react';
+import Conexion from './Conexion'
+var contador = 0;//variable contador que se incrementa segun sea llamada la funcion
 const Mensaje = (props) => {
-  var ws = React.useRef(
-    new WebSocket(`${DIRECCION_SERVER}`),
-  ).current; //direccion chat
-  //const [serverMessages, setServerMessages] = React.useState([]); // hook para mensajes
- //const [mensajes, setMensajes] = React.useState(''); // hook para mensaje
- // const serverMessagesList = [];
-
-  const timeNow = new Date().toLocaleString(); // funcion javascript para tomar el tiempo
-  let mensaje = props.mensaje;
-  let locations = props.location;
-   var estado = props.estado;
-/*
-  console.log('h '+mensaje +" location latitude: "+
-  location.latitude +" longitud "
-  +location.longitude+" estado "+estado);
-*/
-  //setMensajes(mensaje);
-  React.useEffect(() => {
-    /**
-     * lista de mensajes
-     * @type {Array}
-     */
-    //const serverMessagesList = [];
-    ws.onopen = () => {
-      // se habre conexion al server
-     // setServerState('Connected to the server');
-     console.log('connected to the server');
-      //setDisableButton(false);
-    };
-    ws.onclose = e => {
-      // Por si se desconecta
-     // setServerState('Disconnected check internet or server');
-     console.log('disconnected from the server');
-     // setDisableButton(true);
-    };
-    ws.onerror = e => {
-      // Mensaje de error
-      //setServerState(e.message);
-      console.log('error'+e.message);
-    };
-    ws.onmessage = e => {
-      /**
-       *ServerMessage list
-       * @type {Array}
-       */
-      //serverMessagesList.push(e.data); //se guardar en un array el mensaje
-      //setServerMessages([...serverMessagesList]); //se envia con el hook
-    };
-   // ws.send(mensaje); //envia mensaje mas tiempo actual
-
-  }, []);
-
-  if(estado){
-    const timeNow = new Date().toLocaleString(); // funcion javascript para tomar el tiempo
-    ws.send('time'+timeNow+' mensaje '+mensaje+' latitude '+locations.latitude+' longitude '+locations.longitude); //envia mensaje mas tiempo actual
-   
-  }
+ const timeNow = new Date().toLocaleString(); // funcion javascript para tomar el tiempo
+ let mensaje = props.mensaje;
  
+ var estado = props.estado; 
+ try{
+  const con = new Conexion();
+ 
+  var server= con.conexiones();
+ 
+  con.checkServer(server);
+
+  var ms = null;
+  if(mensaje.length > 0){
+    ms = mensaje;
+  }else{
+    ms = null;
+  }
+
+  var p = contador%2;//saco el modulo de contador para evitar duplicados
+ if(estado && (p == 0)){
+  let locations = props.location;
+  con.sendMessage(server,"mensaje:"+ms+" latitude: "+locations.latitude+" longitude: "+locations.longitude+" timeNow:"+timeNow);
+  estado = false;//devuelvo a falso el estado para evitar que se quede en true
+ }
+ contador++;
+
+ }catch(err){
+   console.log("mensaje err "+err);
+ }
+
   return null;
 };
 
